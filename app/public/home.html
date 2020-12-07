@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html>
+  <head>
+    <title>Chicago 311-Crime Tracker</title>
+    <link type="text/css" rel="stylesheet" href="white-pink.css" />
+  </head>
+  <body style='background-image:URL("chicago-flag.webp");background-repeat:no-repeat;background-position:center top;-webkit-background-size:100%;-moz-background-size:100%;-o-background-size:100%;background-size: 100%;'>
+    <div class="white-pink">
+      <h1 style="text-align: center;padding: 0px 0px 0px 0px">
+        Welcome to the Chicago 311 Service Request and Crime Tracker
+        <span>Click on one of the menu options below to see some 311 call and crime stats</span>
+      </h1>
+    </div>
+    <br>
+    <div class="white-pink">
+      <h1>Menu Options</h1>
+      <p>311 Call Performance - By Department:</p>
+      <form action="/avg_delta.html" style="width:300px;margin:0 auto;padding-top=200px;background:#FFFFFF" method="get" target="results_iframe">
+        <label style="text-align: center">
+          <input style="text-align: center" type="submit" value="Average Time to Complete Service Requests">
+        </label>
+      </form>
+      <form action="/open_requests.html" style="width:300px;margin:0 auto;padding-top=200px;background:#FFFFFF" method="get" target="results_iframe">
+        <label style="text-align: center">
+          <input style="text-align: center" type="submit" value="See Total Number of Open Requests">
+        </label>
+      </form>
+      <p>Combined 311 and Crime Totals by Community Area:</p>
+      <form action="/sr_crime_totals.html" style="width:300px;margin:0 auto;padding-top=200px;background:#FFFFFF" method="get" target="results_iframe">
+        <label>
+          <span></span> <input  type="submit" value="See Total Service Requests and Crime by Community Area">
+        </label>
+      </form>
+      <p>Choose to view crime types or 311 call types by community area</p>
+      <form action="/comm_area.html" style="text-align: center;margin:0 auto;padding-top=200px;background:#FFFFFF" method="get">
+        <label for="stats"></label>
+        <select name="stats" id="stats">
+          <option value="true">Crimes</option>
+          <option value="false">Service Requests</option>
+        </select>
+        <span></span> <input type="submit" value="Submit">
+      </form>
+    </div>
+    <div>
+      <iframe frameBorder="0" name="results_iframe" style="display:block;width:70%;height:100%;margin-left:auto;margin-right:auto"/>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,1 @@
+curl "https://data.cityofchicago.org/api/views/ijzp-q8t2/rows.csv?accessType=DOWNLOAD" | tail -n +2 | hdfs dfs -put - /inputs/mtrichardson/crimeData/crimeHistorical.csv

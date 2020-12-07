@@ -1,0 +1,3 @@
+create 'mtrichardson_avg_delta_dept', 'deltas'
+
+create 'mtrichardson_open_calls_dept', 'calls'
