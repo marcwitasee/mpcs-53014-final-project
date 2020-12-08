@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE mtrichardson_crime_calls_by_comm_area (
+CREATE TABLE mtrichardson_crime_calls_by_comm_area (
     community_area STRING,
     calls BIGINT,
     crimes BIGINT
@@ -46,3 +46,33 @@ INSERT OVERWRITE TABLE mtrichardson_crime_by_comm
         FROM mtrichardson_chi_crime
         WHERE comm_area IS NOT NULL
         GROUP BY comm_area, primary_type;
+
+CREATE TABLE mtrichardson_avg_delta_dept (
+    owner_dept STRING,
+    delta BIGINT,
+    calls BIGINT
+)
+STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+WITH SERDEPROPERTIES ('hbase.columns.mapping' = ':key,deltas:delta#b,deltas:calls#b')
+TBLPROPERTIES('hbase.table.name' = 'mtrichardson_avg_delta_dept');
+
+INSERT OVERWRITE TABLE mtrichardson_avg_delta_dept
+    SELECT owner_dept, 
+      CAST(ROUND(SUM((UNIX_TIMESTAMP(closed_date) - UNIX_TIMESTAMP(created_date))/60), 0) AS BIGINT) as delta,
+      COUNT(if(closed_date is not null, 1, null)) as calls
+      FROM mtrichardson_311_chi GROUP BY owner_dept;
+
+CREATE TABLE mtrichardson_avg_delta_dept (
+    owner_dept STRING,
+    delta BIGINT,
+    calls BIGINT
+)
+STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+WITH SERDEPROPERTIES ('hbase.columns.mapping' = ':key,deltas:delta#b,deltas:calls#b')
+TBLPROPERTIES('hbase.table.name' = 'mtrichardson_avg_delta_dept');
+
+INSERT OVERWRITE TABLE mtrichardson_avg_delta_dept
+    SELECT owner_dept, 
+      CAST(ROUND(SUM((UNIX_TIMESTAMP(closed_date) - UNIX_TIMESTAMP(created_date))/60), 0) AS BIGINT) as delta,
+      COUNT(if(closed_date is not null, 1, null)) as calls
+      FROM mtrichardson_311_chi GROUP BY owner_dept;

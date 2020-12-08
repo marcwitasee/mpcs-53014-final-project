@@ -1,11 +1,8 @@
 'use strict';
-const http = require('http');
-var assert = require('assert');
 const express= require('express');
 const app = express();
 const mustache = require('mustache');
 const filesystem = require('fs');
-const url = require('url');
 const comm_areas = require('./data/community_areas.json')
 const port = Number(process.argv[2]);
 
@@ -115,7 +112,7 @@ app.get('/open_requests.html',function(req, res) {
 
 })
 
-// Action for getting service request and crime totals
+// Action for getting service request and crime totals by community area
 app.get('/sr_crime_totals.html',function(req, res) {
 
 	function buildSrCrimeTable(stats) {
