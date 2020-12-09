@@ -1,43 +1,43 @@
 <!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <html>
   <head>
-    <title>311 & Crime Stats</title>
+    <title>Community Area Lookup</title>
     <link type="text/css" rel="stylesheet" href="white-pink.css" />
-      <style>
-          input::-webkit-calendar-picker-indicator {
-              display: none;/* remove default arrow */
-          }
-          .myarrow:after {
-              content: url(https://i.stack.imgur.com/i9WFO.png);
-              margin-left: -20px;
-              padding: .1em;
-              pointer-events:none;
-          }
-      </style>
-      <script>
-          <!-- https://stackoverflow.com/questions/9975810/make-iframe-automatically-adjust-height-according-to-the-contents-without-using -->
-          function resizeIframe(obj) {
-              obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
-          }
-      </script>
-        <script>
-            function getAction(obj) {
-                if (obj) {
-                    document.getElementById('dropdown').setAttribute('action', '/crime_type.html')
-                } else {
-                    document.getElementById("dropdown").setAttribute('action', '/sr_type.html')
-                }
+    <style>
+      input::-webkit-calendar-picker-indicator {
+          display: none;/* remove default arrow */
+      }
+      .myarrow:after {
+          content: url(https://i.stack.imgur.com/i9WFO.png);
+          margin-left: -20px;
+          padding: .1em;
+          pointer-events:none;
+      }
+    </style>
+    <script>
+        <!-- https://stackoverflow.com/questions/9975810/make-iframe-automatically-adjust-height-according-to-the-contents-without-using -->
+        function resizeIframe(obj) {
+          obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+        }
+    </script>
+    <script>
+        function getAction(obj) {
+            if (obj) {
+                document.getElementById('dropdown').setAttribute('action', '/crime_type.html')
+            } else {
+                document.getElementById("dropdown").setAttribute('action', '/sr_type.html')
             }
-        </script>
-      <script>
-          function getHeader(obj) {
-              if (obj) {
-                  document.getElementById('heading').innerText = "Select a community area to view crime stats"
-              } else {
-                  document.getElementById("heading").innerText = "Select a community area to view service request stats"
-              }
-          }
-      </script>
+        }
+    </script>
+    <script>
+        function getHeader(obj) {
+            if (obj) {
+              document.getElementById('heading').innerText = "Select a community area to view crime stats"
+            } else {
+              document.getElementById("heading").innerText = "Select a community area to view service request stats"
+            }
+        }
+    </script>
   </head>
   <body style='background-image:URL("chicago-flag.webp");background-repeat:repeat;background-position:center top;-webkit-background-size:100%;-moz-background-size:100%;-o-background-size:100%;background-size: 100%;'>
     <div class="white-pink">
