@@ -32,7 +32,6 @@ object StreamServiceRequests {
   def incrementDeltas(ksrr : KafkaServiceRequestRecord) : String = {
 
     if (ksrr.closedDate != null) {
-      println(ksrr.closedDate)
       val createdTime = DateTime.parse(ksrr.createdDate)
       val closedTime = DateTime.parse(ksrr.closedDate)
       val delta = (closedTime.getMillis() / 1000) - (createdTime.getMillis() / 1000)
@@ -85,7 +84,7 @@ object StreamServiceRequests {
     
     val Array(brokers) = args
 
-    // Create context with 2 second batch interval
+    // Create context with 5 second batch interval
     val sparkConf = new SparkConf().setAppName("StreamServiceRequests")
     val ssc = new StreamingContext(sparkConf, Seconds(5))
 

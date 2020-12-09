@@ -5,7 +5,7 @@
       <paths name="Deploy2">
         <serverdata>
           <mappings>
-            <mapping deploy="mtrichardson/final_project" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="mtrichardson/final_project/311DataKafkaProducer" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

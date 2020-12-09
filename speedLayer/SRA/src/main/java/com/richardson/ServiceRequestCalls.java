@@ -1,7 +1,4 @@
 package com.richardson;
-import java.net.Authenticator;
-import java.net.InetAddress;
-import java.net.PasswordAuthentication;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -17,8 +14,6 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import com.richardson.ServiceRequest;
 
 // Inspired by http://stackoverflow.com/questions/14458450/what-to-use-instead-of-org-jboss-resteasy-client-clientrequest
 public class ServiceRequestCalls {
@@ -61,11 +56,8 @@ public class ServiceRequestCalls {
 
 		@Override
 		public void run() {
-//			String callLatestOpenRequests = "https://data.cityofchicago.org/resource/v6vf-nfxy.json?status=%27Open%27&$limit=10";
-//			String callLatestRequests = "https://data.cityofchicago.org/resource/v6vf-nfxy.json?$limit=10";
-			String callLatestRequests = "https://data.cityofchicago.org/resource/v6vf-nfxy.json?$where=community_area%20IS%20NOT%20NULL&$limit=10&$order=created_date%20DESC";
+			String callLatestRequests = "https://data.cityofchicago.org/resource/v6vf-nfxy.json?$limit=10";
 			ServiceRequest[] responseLatestRequests = getServiceRequest(callLatestRequests);
-//			System.out.println(response);
 			if(responseLatestRequests == null)
 				return;
 			ObjectMapper mapper = new ObjectMapper();
@@ -80,7 +72,7 @@ public class ServiceRequestCalls {
 							serviceRequest.getSrNumber(),
 							serviceRequest.getCommunityArea(),
 							serviceRequest.getSrType());
-//					System.out.println(ksrr);
+					System.out.println(ksrr);
 					data = new ProducerRecord<String, String>(TOPIC, mapper.writeValueAsString(ksrr));
 					producer.send(data);
 				} catch (JsonProcessingException e) {
@@ -91,33 +83,12 @@ public class ServiceRequestCalls {
 		}
 
 	}
-//	public static class CustomAuthenticator extends Authenticator {
-//
-//		// Called when password authorization is needed
-//		protected PasswordAuthentication getPasswordAuthentication() {
-//
-//			// Get information about the request
-//			String prompt = getRequestingPrompt();
-//			String hostname = getRequestingHost();
-//			InetAddress ipaddr = getRequestingSite();
-//			int port = getRequestingPort();
-//
-//			String username = "Put Your Username here"; // TODO
-//			String password = "Put your password here"; // TODO
-//
-//			// Return the information (a data holder that is used by Authenticator)
-//			return new PasswordAuthentication(username, password.toCharArray());
-//
-//		}
-//
-//	}
 
 	static String bootstrapServers = new String("localhost:9092");
 
 	public static void main(String[] args) {
 		if(args.length > 0)  // This lets us run on the cluster with a different kafka
 			bootstrapServers = args[0];
-//		Authenticator.setDefault(new CustomAuthenticator());
 		Timer timer = new Timer();
 		timer.scheduleAtFixedRate(new Task(), 0, 60*1000);
 	}
