@@ -155,6 +155,17 @@ app.get('/comm_area.html', function (req, res) {
 	for (const i in comm_areas.COMMUNITY) {
 		data.push({comm_area: i, name: comm_areas.COMMUNITY[i]})
 	}
+	console.info(data.sort(function (a, b) {
+		const aName = a.name.slice(0,1)
+		const bName = b.name.slice(0,1)
+		if (aName < bName) {
+			return -1
+		} else if (aName === bName) {
+			return 0
+		} else {
+			return 1
+		}
+	}))
 
 	let html = mustache.render(template, {
 		crimes: option,
