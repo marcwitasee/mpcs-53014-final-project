@@ -29,10 +29,30 @@
                 }
             }
         </script>
+      <script>
+          function getHeader(obj) {
+              if (obj) {
+                  document.getElementById('heading').innerText = "Select a community area to view crime stats"
+              } else {
+                  document.getElementById("heading").innerText = "Select a community area to view service request stats"
+              }
+          }
+      </script>
   </head>
-  <body style='background-image:URL("chicago-flag.webp");background-repeat:no-repeat;background-position:center top;-webkit-background-size:100%;-moz-background-size:100%;-o-background-size:100%;background-size: 100%;'>
+  <body style='background-image:URL("chicago-flag.webp");background-repeat:repeat;background-position:center top;-webkit-background-size:100%;-moz-background-size:100%;-o-background-size:100%;background-size: 100%;'>
     <div class="white-pink">
-        <h1 style="text-align: center;padding: 0px 0px 0px 0px">Select a community area to view</h1>
+        <h1 id="heading" style="text-align: center;padding: 0px 0px 0px 0px" >
+            <script>
+                if ({{crimes}}) {
+                    document.getElementById('heading').innerText = "Select a community area to view crime stats"
+                } else {
+                    document.getElementById("heading").innerText = "Select a community area to view service request stats"
+                }
+            </script>
+            <span>
+                <a href="/home.html">Back to Home</a>
+            </span>
+        </h1>
     </div>
     <br>
     <div class="white-pink" style="height: 80px">

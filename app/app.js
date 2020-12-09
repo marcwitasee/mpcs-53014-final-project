@@ -69,7 +69,8 @@ app.get('/avg_delta.html',function(req, res) {
 		const rv = []
 
 		for (const i in stats) {
-			let avg_delta = ((stats[i]['delta'] / stats[i]['calls']) / 60) / 24
+			// calculate average time in seconds and convert to days
+			let avg_delta = (stats[i]['delta'] / stats[i]['calls']) / 86400
 			avg_delta = avg_delta.toFixed(2)
 			if (avg_delta == 0) {
 				avg_delta = "< 1"
