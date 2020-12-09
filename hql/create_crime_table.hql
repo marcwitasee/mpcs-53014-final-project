@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS mtrichardson_chi_crime_csv;
+
 CREATE EXTERNAL TABLE mtrichardson_chi_crime_csv(
     id STRING,
     case_number STRING,
@@ -29,6 +31,8 @@ WITH SERDEPROPERTIES(
 STORED AS TEXTFILE
     location '/inputs/mtrichardson/crimeData';
 
+DROP TABLE IF EXISTS mtrichardson_chi_crime;
+
 CREATE TABLE mtrichardson_chi_crime (
     id BIGINT,
     case_number STRING,
@@ -59,5 +63,7 @@ INSERT OVERWRITE TABLE mtrichardson_chi_crime
     SELECT id, case_number,
         FROM_UNIXTIME(UNIX_TIMESTAMP(crime_date, 'MM/dd/yyyy hh:mm:ss aa'), 'yyyy-MM-dd HH:mm:ss') as crime_date,
         block, iucr, primary_type, description, location_desc, arrest, domestic, beat, district, ward,
-        comm_area, fbi_code, x_coordinate, y_coordinate, year, updated_on, latitude, longitude, location
+        comm_area, fbi_code, x_coordinate, y_coordinate, year,
+        FROM_UNIXTIME(UNIX_TIMESTAMP(updated_on, 'MM/dd/yyyy hh:mm:ss aa'), 'yyyy-MM-dd HH:mm:ss') as updated_on,
+        latitude, longitude, location
     FROM mtrichardson_chi_crime_csv;

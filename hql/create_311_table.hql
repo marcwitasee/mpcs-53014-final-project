@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS mtrichardson_311_chi_csv;
+
 CREATE EXTERNAL TABLE mtrichardson_311_chi_csv (
     sr_number STRING,
     sr_type STRING,
@@ -43,6 +45,8 @@ WITH SERDEPROPERTIES (
 )
 STORED AS TEXTFILE
   location '/inputs/mtrichardson/311Data';
+
+DROP TABLE IF EXISTS mtrichardson_311_chi;
 
 CREATE TABLE mtrichardson_311_chi(
     sr_number STRING,
