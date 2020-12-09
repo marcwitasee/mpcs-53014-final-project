@@ -15,10 +15,11 @@ In each section, I will detail my reasoning for making particular design choices
 ## Section I: Getting the Data on HDFS on the AWS Cluster
 
 For my final project, I worked with two datasets, both from the Chicago open data portal:
-1) Chicago's 311 service request dataset and 2) Chicago's crime dataset. To download the
-historical observations for each dataset, I ssh'd into the name node on the cluster and use 
-the shell scripts in "mtrichardson/final_project/sh" to curl the CSV files for each source 
-which I then piped into a command that put the csv files into HDFS.
+1) Chicago's 311 service request dataset 
+2) Chicago's crime dataset
+To download the historical observations for each dataset, I ssh'd into the name node on the 
+cluster and use the shell scripts in "mtrichardson/final_project/sh" to curl the CSV files 
+for each source which I then piped into a command that put the csv files into HDFS.
 
 My reasoning for importing the datasets directly into the HDFS was for the sake of simplicity.
 Although serializing and deserializing the data through thift would have ensured greater data
@@ -53,4 +54,4 @@ created in HBase. Each batch view is also incremented with data streamed from my
 
 ## Section V: Application Deployment
 
-
+To deploy my application to the cloud, I used CodeDeploy on AWS.
