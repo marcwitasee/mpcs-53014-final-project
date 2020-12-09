@@ -1,9 +1,12 @@
-MPCS 53014 - Final Project
-Student: Marc Richardson
-CNETID: mtrichardson
-Student ID: 12244326
+# MPCS 53014 - Final Project
 
-# Overview
+*Student*: Marc Richardson
+
+*CNETID*: mtrichardson
+
+*Student ID*: 12244326
+
+## Overview
 
 This readme file contains the details of how I stood up my big data application. The file is
 divided into five sections: 1) how I got the data into HDFS; 2) how I created the batch views
