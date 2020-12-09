@@ -15,8 +15,10 @@ In each section, I will detail my reasoning for making particular design choices
 ## Section I: Getting the Data on HDFS on the AWS Cluster
 
 For my final project, I worked with two datasets, both from the Chicago open data portal:
+
 1) Chicago's 311 service request dataset 
 2) Chicago's crime dataset
+
 To download the historical observations for each dataset, I ssh'd into the name node on the 
 cluster and use the shell scripts in "mtrichardson/final_project/sh" to curl the CSV files 
 for each source which I then piped into a command that put the csv files into HDFS.
