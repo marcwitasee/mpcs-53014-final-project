@@ -16,12 +16,12 @@ application (along with instructions for running a demo of the speed layer on th
 
 All of the code that I wrote for this application is contained in this github repo.
 
-* 311_crime_app - contains the files and a zip of those files that I used to deploy my app to the cluster
-* app - contains the code for the application (app.js, mustache files, html and css files, data files)
-* hql - contains files with the hql queries that I ran in Hive to create my master dataset tables and batch views
-* notebooks - contains single notebook I used to create a JSON of community areas and names for my application
-* sh - contains the shell scripts I used to get the datasets on HDFS
-* speedLayer - contains the programs that I used to create the speed layer for my app
+* *311_crime_app* - contains the files and a zip of those files that I used to deploy my app to the cluster
+* *app* - contains the code for the application (app.js, mustache files, html and css files, data files)
+* *hql* - contains files with the hql queries that I ran in Hive to create my master dataset tables and batch views
+* *notebooks* - contains single notebook I used to create a JSON of community areas and names for my application
+* *sh* - contains the shell scripts I used to get the datasets on HDFS
+* *speedLayer* - contains the programs that I used to create the speed layer for my app
 
 To see a demo of the application, see the video linked [here](https://www.loom.com/share/3b870d008e674c6ea0ec70abccb6c5a5).
 
