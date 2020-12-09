@@ -32,4 +32,25 @@ crimeData/crimeHistorical.csv".
 
 ## Section II: Creating Batch Views in Hive
 
-Once I imported the data onto the cluster in HDFS, I then set about getting that data into Hive. In the "hql" directory on my github repo, I have the HQL scripts that I used to both create the tables for the master datasets and construct the batch views for my application. I created five total batch views for my serving layer.
+Once I imported the data onto the cluster in HDFS, I then set about getting that data into 
+Hive. In the "hql" directory on my github repo, I have the HQL scripts that I used to both 
+create the tables for the master datasets and construct the batch views for my application. I 
+created five total batch views for my serving layer. All of my batch views are stored as 
+tables in HBase.
+
+## Section III: Creating the Speed Layer for the Application
+
+For the speed layer for my application, I wrote four programs: 2 java programs for writing 
+data to my kafka topics and 2 scala programs for reading data from the kafka topics and
+incrementing my batch view tables in HBase. For both 311 and crime data, I pull new data from
+the API endpoints exposed by the Chicago open data portal for each data source.
+
+## Section IV: Creating the Web Application with Node.js
+
+For the web application framework, I used Node.js. I created a simple front end with a menu of
+options for the user to select from. Each menu option corresponds to a batch view that I 
+created in HBase. Each batch view is also incremented with data streamed from my speed layer.
+
+## Section V: Application Deployment
+
+
