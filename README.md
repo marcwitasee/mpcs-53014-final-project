@@ -42,8 +42,8 @@ integrity, each dataset included a large number of fields that would have been t
 serlialize and deserialize through thrift. I opted for a bit more flexiblity by importing
 the CSV files directly to HDFS.
 
-The master dataset for 311 service requests reside at `/inputs/mtrichardson/311Calls/311historical.csv`. 
-The master dataset for crime data resides at `/inputs/mtrichardson/crimeData/crimeHistorical.csv`.
+On HDFS, the master dataset for 311 service requests reside at `/inputs/mtrichardson/311Calls/311historical.csv` and
+the master dataset for crime data resides at `/inputs/mtrichardson/crimeData/crimeHistorical.csv`.
 
 ## Section II: Creating Batch Views in Hive
 
@@ -72,8 +72,8 @@ that I use to compute the batch views.
 
 ## Section III: Creating the Speed Layer for the Application
 
-For the speed layer for my application, I wrote four programs: 2 java programs for writing 
-data to my kafka topics and 2 scala programs for reading data from the kafka topics and
+For the speed layer for my application, I wrote four programs: two java programs for writing 
+data to my kafka topics and two scala programs for reading data from the kafka topics and
 incrementing my batch view tables in HBase. For both 311 and crime data, I pull new data from
 the API endpoints exposed by the Chicago open data portal for each data source in my java programs.
 The 311 call data is updated frequently throughout the day (about once every two hours), so it makes
