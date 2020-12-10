@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <html>
   <head>
-    <title>Community Area Lookup</title>
+    <title>Neighborhood Lookup</title>
     <link type="text/css" rel="stylesheet" href="white-pink.css" />
     <style>
       input::-webkit-calendar-picker-indicator {
@@ -44,9 +44,9 @@
         <h1 id="heading" style="text-align: center;padding: 0px 0px 0px 0px" >
             <script>
                 if ({{crimes}}) {
-                    document.getElementById('heading').innerText = "Select a community area to view crime stats"
+                    document.getElementById('heading').innerText = "Select a neighborhood to view crime stats"
                 } else {
-                    document.getElementById("heading").innerText = "Select a community area to view service request stats"
+                    document.getElementById("heading").innerText = "Select a neighborhood to view service request stats"
                 }
             </script>
             <span>
@@ -57,7 +57,7 @@
     <br>
     <div class="white-pink" style="height: 80px">
         <form id='dropdown' style="width:500px;height:50px;margin:0 auto;padding-top=200px;background:#FFFFFF" method="get" target="results_iframe">
-            <label for="names">Community Area:
+            <label for="names" style="font-size: 14px">Neighborhood:
 	            <select list="names" name="name"/>
                     <datalist id="names">
                         {{#names}}

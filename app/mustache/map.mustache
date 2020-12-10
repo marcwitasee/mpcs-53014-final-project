@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <html>
   <head>
-    <title>Chicago 311-Crime Tracker</title>
+    <title>Chicago 311 Service Request Map</title>
     <link type="text/css" rel="stylesheet" href="white-pink.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
           integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
@@ -10,16 +10,17 @@
             integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
             crossorigin=""></script>
   </head>
-  <body style='background-image:URL("https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Flag_of_Chicago%2C_Illinois.svg/1200px-Flag_of_Chicago%2C_Illinois.svg.png");background-repeat:repeat;background-position:center top;-webkit-background-size:100%;-moz-background-size:100%;-o-background-size:100%;background-size: 100%;'>
+  <body>
     <div class="white-pink">
       <h1 style="text-align: center;padding: 0 0 0 0">
-        Chicago 311 Service Request and Crime Map
+        Chicago 311 Service Request Map
+          <span>Shows the latest 100 open service requests plus new requests added today</span>
       </h1>
     </div>
     <br>
     <div id="mapid" class="white-pink"></div>
     <script>
-      var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+      var mymap = L.map('mapid').setView([41.87, -87.62], 13);
 
       L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -29,6 +30,12 @@
         zoomOffset: -1,
         accessToken: 'pk.eyJ1IjoibWFyY3dpdGFzZWUiLCJhIjoiY2tkaHljOHNqMDB3dDJ3cGI2dWR2YmpuaSJ9.thA8fs03yFEs88QIdFs2Og'
       }).addTo(mymap);
+
+      {{#info}}
+          var marker = L.marker([parseFloat({{data.latitude}}), parseFloat({{data.longitude}})],
+                  options={opacity: 0.8, riseOnHover: true}).addTo(mymap)
+                  .bindPopup("SR Number: ".bold() + "{{srNumber}}" + " Type: ".bold() + "{{data.sr_type}}" + " Date Created: ".bold() + "{{data.created_date}}");
+      {{/info}}
     </script>
   </body>
 </html>

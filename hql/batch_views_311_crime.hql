@@ -85,3 +85,23 @@ INSERT OVERWRITE TABLE mtrichardson_open_calls_dept
     FROM mtrichardson_311_chi
     WHERE duplicate IS FALSE
     GROUP BY owner_dept;
+
+DROP TABLE IF EXISTS mtrichardson_open_sr_locations;
+
+CREATE TABLE mtrichardson_open_sr_locations (
+    sr_number STRING,
+    sr_type STRING,
+    created_date TIMESTAMP,
+    community_area BIGINT,
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION
+)
+STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+WITH SERDEPROPERTIES ('hbase.columns.mapping' = ':key,geo:sr_type,geo:created_date,geo:community_area,geo:latitude,geo:longitude')
+TBLPROPERTIES('hbase.table.name' = 'mtrichardson_open_sr_locations');
+
+INSERT OVERWRITE TABLE mtrichardson_open_sr_locations
+    SELECT sr_number, sr_type, created_date, community_area, latitude, longitude
+    FROM mtrichardson_311_chi
+    WHERE status = 'Open' AND latitude IS NOT NULL AND longitude IS NOT NULL
+    ORDER BY created_date DESC;

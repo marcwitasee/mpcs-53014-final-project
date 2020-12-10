@@ -20,7 +20,7 @@
     <br>
     <div class="white-pink">
       <h1>Menu Options</h1>
-      <p>311 Call Performance - By Department:</p>
+      <p style="font-size: 16px">311 Call Performance - By Department:</p>
       <form action="/avg_delta.html" style="width:300px;margin:0 auto;padding-top=200px;background:#FFFFFF" method="get" target="results_iframe">
         <label style="text-align: center">
           <input style="text-align: center" type="submit" value="Average Time to Complete Service Requests">
@@ -31,13 +31,18 @@
           <input style="text-align: center" type="submit" value="See Total Number of Open Requests">
         </label>
       </form>
-      <p>Combined 311 and Crime Totals by Community Area:</p>
-      <form action="/sr_crime_totals.html" style="width:300px;margin:0 auto;padding-top=200px;background:#FFFFFF" method="get" target="results_iframe">
-        <label>
-          <span></span> <input  type="submit" value="See Total Service Requests and Crime by Community Area">
+      <form action="/sr_locations.html" style="width:300px;margin:0 auto;padding-top=200px;background:#FFFFFF" method="get" target="results_iframe">
+        <label style="text-align: center">
+          <input  type="submit" value="See a Map of Active Service Requests">
         </label>
       </form>
-      <p>Choose to view crime types or 311 call types by community area</p>
+      <p style="font-size: 16px">Combined 311 and Crime Totals by Neighborhood:</p>
+      <form action="/sr_crime_totals.html" style="width:300px;margin:0 auto;padding-top=200px;background:#FFFFFF" method="get" target="results_iframe">
+        <label>
+          <span></span> <input  type="submit" value="See Total Service Requests and Crime by Neighborhood">
+        </label>
+      </form>
+      <p style="font-size: 16px">View Crime or Service Request Breakdowns by Neighborhood:</p>
       <form action="/comm_area.html" style="text-align: center;margin:0 auto;padding-top=200px;background:#FFFFFF" method="get">
         <label for="stats"></label>
         <select name="stats" id="stats">

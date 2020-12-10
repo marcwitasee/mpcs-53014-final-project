@@ -13,7 +13,7 @@ function counterToNumber(c) {
 	return Number(Buffer.from(c).readBigInt64BE());
 }
 
-function unpackHbaseColumns(results) {
+function unpackHbaseColumns(results, useBuffer=true) {
 
 	let stats = {}
 
@@ -23,7 +23,11 @@ function unpackHbaseColumns(results) {
 
 	results.forEach(function (item) {
 		let data = stats[item['key']]
-		data[item['column'].split(':')[1]] = counterToNumber(item['$'])
+		if (useBuffer) {
+			data[item['column'].split(':')[1]] = counterToNumber(item['$'])
+		} else {
+			data[item['column'].split(':')[1]] = item['$']
+		}
 	});
 
 	return stats
@@ -53,6 +57,11 @@ function getFilteredResults(tableName, CommArea, res, template) {
 			res.send(html)
 		})
 }
+
+hclient.table('mtrichardson_open_sr_locations').scan((err, vals) => {
+	console.info(vals)
+	console.info(unpackHbaseColumns(vals, false))
+})
 
 app.use(express.static('public'));
 
@@ -155,7 +164,8 @@ app.get('/comm_area.html', function (req, res) {
 	for (const i in comm_areas.COMMUNITY) {
 		data.push({comm_area: i, name: comm_areas.COMMUNITY[i]})
 	}
-	console.info(data.sort(function (a, b) {
+
+	data.sort(function (a, b) {
 		const aName = a.name.slice(0,1)
 		const bName = b.name.slice(0,1)
 		if (aName < bName) {
@@ -165,7 +175,7 @@ app.get('/comm_area.html', function (req, res) {
 		} else {
 			return 1
 		}
-	}))
+	})
 
 	let html = mustache.render(template, {
 		crimes: option,
@@ -190,6 +200,21 @@ app.get('/crime_type.html', function (req, res) {
 	const comm_area = req.query['name']
 	let template = filesystem.readFileSync("mustache/crimes_by_comm.mustache").toString();
 	getFilteredResults('mtrichardson_crime_by_comm', comm_area, res, template)
+})
+
+app.get('/sr_locations.html', function(req, res) {
+	hclient.table('mtrichardson_open_sr_locations').scan((err, vals) => {
+		let data = unpackHbaseColumns(vals, false)
+		const template = filesystem.readFileSync("mustache/map.mustache").toString()
+		const datalist = []
+		for (const i in data) {
+			datalist.push({ srNumber: i, data: data[i] })
+		}
+		const html = mustache.render(template, {
+			info: datalist
+		})
+		res.send(html)
+	})
 })
 	
 app.listen(port);
