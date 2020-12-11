@@ -4,15 +4,14 @@ import org.apache.spark.streaming._
 import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
 import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
 import org.apache.spark.streaming.kafka010._
-import com.fasterxml.jackson.databind.{ DeserializationFeature, ObjectMapper }
-import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
+import com.fasterxml.jackson.databind.{ ObjectMapper }
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hbase.TableName
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.ConnectionFactory
-import org.apache.hadoop.hbase.client.Get
 import org.apache.hadoop.hbase.client.Increment
+import org.apache.hadoop.hbase.client.Put
 import org.apache.hadoop.hbase.util.Bytes
 import org.joda.time.DateTime
 
@@ -28,6 +27,7 @@ object StreamServiceRequests {
   val serviceCallsByComm = hbaseConnection.getTable(TableName.valueOf("mtrichardson_sr_type_by_comm"))
   val serviceCallDeltas = hbaseConnection.getTable(TableName.valueOf("mtrichardson_avg_delta_dept"))
   val openServiceCalls = hbaseConnection.getTable(TableName.valueOf("mtrichardson_open_calls_dept"))
+  val locations = hbaseConnection.getTable(TableName.valueOf("mtrichardson_open_sr_locations"))
   
   def incrementDeltas(ksrr : KafkaServiceRequestRecord) : String = {
 
@@ -72,6 +72,26 @@ object StreamServiceRequests {
     "Open - Updated speed layer for new service request " + ksrr.srNumber + " in " + ksrr.ownerDepartment
   }
 
+  def addLocationRow(ksrr : KafkaServiceRequestRecord) : String = {
+    if (ksrr.status == "Open") {
+      val put = new Put(Bytes.toBytes(ksrr.srNumber))
+      put.addColumn(Bytes.toBytes("geo"), Bytes.toBytes("sr_type"), Bytes.toBytes(ksrr.srType))
+      put.addColumn(Bytes.toBytes("geo"), Bytes.toBytes("created_date"), Bytes.toBytes(ksrr.createdDate))
+      put.addColumn(Bytes.toBytes("geo"), Bytes.toBytes("community_area"), Bytes.toBytes(ksrr.communityArea))
+      put.addColumn(Bytes.toBytes("geo"), Bytes.toBytes("latitude"), Bytes.toBytes(ksrr.latitude))
+      put.addColumn(Bytes.toBytes("geo"), Bytes.toBytes("longitude"), Bytes.toBytes(ksrr.longitude))
+      try {
+        locations.put(put)
+        "Successful appending of new location record to HBase table"
+      } catch {
+        case e: Exception => "Failed to append new record".format()
+      }
+    } else {
+      "Request already closed... nothing to update"
+    }
+
+  }
+
   def main(args: Array[String]) {
     if (args.length < 1) {
       System.err.println(s"""
@@ -113,9 +133,11 @@ object StreamServiceRequests {
     val processedTotalRequests = ksrr.map(incrementTotalCalls)
     val processedOpenRequests = ksrr.map(incrementOpenCalls)
     val processedDeltas = ksrr.map(incrementDeltas)
+    val processedLocs = ksrr.map(addLocationRow)
     processedTotalRequests.print()
     processedOpenRequests.print()
     processedDeltas.print()
+    processedLocs.print()
     // Start the computation
     ssc.start()
     ssc.awaitTermination()

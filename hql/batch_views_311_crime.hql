@@ -104,4 +104,5 @@ INSERT OVERWRITE TABLE mtrichardson_open_sr_locations
     SELECT sr_number, sr_type, created_date, community_area, latitude, longitude
     FROM mtrichardson_311_chi
     WHERE status = 'Open' AND latitude IS NOT NULL AND longitude IS NOT NULL
-    ORDER BY created_date DESC;
+    ORDER BY created_date DESC
+    LIMIT 100;

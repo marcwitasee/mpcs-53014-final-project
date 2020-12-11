@@ -8,4 +8,6 @@ case class KafkaServiceRequestRecord(
     status: String,
     srNumber: String,
     communityArea: String,
-    srType: String)
+    srType: String,
+    latitude: String,
+    longitude: String)

@@ -71,7 +71,9 @@ public class ServiceRequestCalls {
 							serviceRequest.getStatus(),
 							serviceRequest.getSrNumber(),
 							serviceRequest.getCommunityArea(),
-							serviceRequest.getSrType());
+							serviceRequest.getSrType(),
+							serviceRequest.getLatitude(),
+							serviceRequest.getLongitude());
 					System.out.println(ksrr);
 					data = new ProducerRecord<String, String>(TOPIC, mapper.writeValueAsString(ksrr));
 					producer.send(data);
