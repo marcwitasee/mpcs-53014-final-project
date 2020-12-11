@@ -8,18 +8,18 @@
 
 ## Overview
 
-This readme file contains the details of how I stood up my big data application. The file is
-divided into five sections: 1) how I got the data into HDFS; 2) how I created the batch views
+This readme file contains the details of how I stood up my big data application. The document is
+divided into five sections: 1) how I got my datasets into HDFS; 2) how I created the batch views
 for my application's serving layer in Hive; 3) how I created the speed layer for my 
 application (along with instructions for running a demo of the speed layer on the cluster);
 4) how I created the application; and 5) how I deployed the application to the cloud.
 
 All of the code that I wrote for this application is contained in this github repo.
 
-* *311_crime_app* - contains the files and a zip of those files that I used to deploy my app to the cluster
+* *311_crime_app* - contains a zip of those files that I used to deploy my app to the cluster
 * *app* - contains the code for the application (app.js, mustache files, html and css files, data files)
 * *hql* - contains files with the hql queries that I ran in Hive to create my master dataset tables and batch views
-* *notebooks* - contains single notebook I used to create a JSON of community areas and names for my application
+* *notebooks* - contains a single notebook I used to create a JSON of community areas and names for my application
 * *sh* - contains the shell scripts I used to get the datasets on HDFS
 * *speedLayer* - contains the programs that I used to create the speed layer for my app
 
@@ -29,7 +29,7 @@ To see a demo of the application, see the video linked [here](https://www.loom.c
 
 For my final project, I worked with two datasets, both from the Chicago open data portal:
 
-1. Chicago's [311 service request](https://data.cityofchicago.org/Service-Requests/311-Service-Requests/v6vf-nfxy) dataset (~4.2 million rows)
+1. Chicago's [311 service requests](https://data.cityofchicago.org/Service-Requests/311-Service-Requests/v6vf-nfxy) dataset (~4.2 million rows)
 2. Chicago's [crime dataset](https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-Present/ijzp-q8t2) (~7.2 million rows)
 
 To download the historical observations for each dataset, I ssh into the name node on the 
@@ -37,7 +37,7 @@ cluster and use the shell scripts in `mtrichardson/final_project/sh` to curl the
 for each source which I then piped into a hdfs command to put them into HDFS.
 
 My reasoning for importing the datasets directly into the HDFS was for the sake of simplicity.
-Although serializing and deserializing the data through thift would have ensured greater data
+Although serializing and deserializing the data through Thift would have ensured greater data
 integrity, each dataset included a large number of fields that would have been tedious to 
 serlialize and deserialize through thrift. I opted for a bit more flexiblity by importing
 the CSV files directly to HDFS.
@@ -59,12 +59,12 @@ I created six total batch views for my serving layer. All of my batch views are 
 tables in HBase and are configured to be incremented or to have new rows appended by my
 speed layer. The names of my batch view tables are:
 
-1. mtrichardson_crime_calls_by_comm_area
-2. mtrichardson_sr_type_by_comm
-3. mtrichardson_crime_by_comm
-4. mtrichardson_avg_delta_dept
-5. mtrichardson_open_calls_dept
-6. mtrichardson_open_sr_locations
+1. mtrichardson_crime_calls_by_comm_area - total crime reports and service requests (all time) by community area. (Community areas essentially correspond to neighborhoods in Chicago.)
+2. mtrichardson_sr_type_by_comm - Total number of service requests grouped by service request types (i.e., '311 information call', 'garbage pick-up request') and community area.
+3. mtrichardson_crime_by_comm - Total number of crime reports grouped by crime types (i.e., "Theft", "Assualt") and community area.
+4. mtrichardson_avg_delta_dept - The aggregated time difference (in seconds) between when a service request is "created" and when a service request is "closed," grouped by department. I also included a column that contains the total number of calls per department, so that I can calculate the average time difference per department, while still being able to increment the table with new data from my speed layer.
+5. mtrichardson_open_calls_dept - The total number of service requests that are "Open," meaning they are still pending, grouped by department.
+6. mtrichardson_open_sr_locations - Location data of "Open" service requests, which I use to populate the map on my application.
 
 One thing that I did not accomplish for my project was figuring out how to append the new 
 data ingested from my speed layer to my master datasets. Ideally, the data streamed in from 
@@ -72,16 +72,17 @@ the speed layer would be added to the master dataset. Furthermore, the batch vie
 recalculated from the master dataset about once a day. This could be accomplished by 
 re-running the HQL query files that I use to compute the batch views. I was considering putting
 my master datasets in HBase and appending new rows to them through my speed layer, but it
-seems like a bad idea to place so much data in HBase, which shoud only store batch views. 
+seemed like a bad idea to place so much data in HBase, which shoud only store batch views. 
 
 ## Section III: Creating the Speed Layer for the Application
 
 For the speed layer for my application, I wrote four programs: two java programs for writing 
 data to my kafka topics and two scala programs for reading data from the kafka topics and
-incrementing my batch view tables in HBase. For both 311 and crime data, I pull new data from
-the API endpoints exposed by the Chicago open data portal for each data source in my java programs.
-The 311 call data is updated frequently throughout the day (about once every two hours), so it makes
-sense to pull this data from the API multiple times per day. However, the crime data is only updated
+updating my batch view tables in HBase. For both 311 and crime data, I pull new data from
+the API endpoints exposed by the Chicago open data portal.
+
+The 311 call data is updated multiple times throughout the day (about once every two hours), so it makes
+sense to pull this data from the API more frequently. However, the crime data is only updated
 daily. Thus, it makes more sense to pull in new data for the crime dataset once a day. I set my program
 to pull data more frequently simply for the sake of demoing that my programs for streaming crime data
 could hypothetically handle more frequent updates to the dataset.
@@ -112,15 +113,16 @@ To run demo of my speed layer for crime data:
 
 For the web application framework, I used Node.js. I created a simple front end with a menu of
 options for the user. Each menu option corresponds to a batch view that I created in HBase.
-Each batch view is also incremented with data streamed from my speed layer. I used mustache
-to dynamically render some of the batch views. My app is connected to the speed layer through
-the batch views stored in Hbase, which are incremented by the speed layer. For the map visualization, I used Leaflet.
+Each batch view is also updated with data streamed from my speed layer. I used mustache
+to dynamically render some of the batch views. For the map visualization, I used Leaflet.
 
 ## Section V: Application Deployment
 
 To deploy my application to the cloud, I used CodeDeploy on AWS. I deployed my application to both
 the QuickDeploy single server (for debugging) and then again to the Load Balanced servers on the
-cluster. On my github repo in the directory `311_crime_app`, you can find the zipfile that I uploaded
-to S3 and used to deploy to the cloud. You can visit the deployed application at:
+cluster. On my [github repo](https://github.com/marcwitasee/mpcs-53014-final-project) in the directory 
+`311_crime_app`, you can find the zipfile that I uploaded to S3 and used to deploy to the cloud. 
+
+You can visit the deployed application at:
 
 `mpcs53014-loadbalancer-217964685.us-east-2.elb.amazonaws.com:3303/`
