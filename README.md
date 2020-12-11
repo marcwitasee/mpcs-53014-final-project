@@ -52,23 +52,27 @@ Hive. In the `hql` directory on my github repo, I have the HQL scripts that I us
 create the tables for the master datasets and construct the batch views for my application. 
 I ran these queries in Hive using the following command: 
 `beeline -u jdbc:hive2://localhost:10000/default -n hadoop -d org.apache.hive.jdbc.HiveDriver -f $FILENAME`.
-The HQL query files are also stored on the name node of the cluster in `mtrichardson/final_project/hql_queries`.
+The HQL query files are also stored on the name node of the cluster in `mtrichardson/final_project/hql_queries`.  
 The table for my 311 call dataset is `mtrichardson_311_chi` and the table for my crime dataset is `mtrichardson_chi_crime`.
 
-I created five total batch views for my serving layer. All of my batch views are stored as 
-tables in HBase and are configured to be incremented by my speed layer. The names of my batch view tables are:
+I created six total batch views for my serving layer. All of my batch views are stored as 
+tables in HBase and are configured to be incremented or to have new rows appended by my
+speed layer. The names of my batch view tables are:
 
 1. mtrichardson_crime_calls_by_comm_area
 2. mtrichardson_sr_type_by_comm
 3. mtrichardson_crime_by_comm
 4. mtrichardson_avg_delta_dept
 5. mtrichardson_open_calls_dept
+6. mtrichardson_open_sr_locations
 
-One thing that I did not accomplish for my project was figuring out how to append the new data ingested from my
-speed layer to my master datasets. Ideally, the data streamed in from the speed layer 
-would be added to the master dataset. Furthermore, the batch views would be recalculated from 
-the master dataset about once a day. This could be accomplished by re-running the HQL queries 
-that I use to compute the batch views.
+One thing that I did not accomplish for my project was figuring out how to append the new 
+data ingested from my speed layer to my master datasets. Ideally, the data streamed in from 
+the speed layer would be added to the master dataset. Furthermore, the batch views would be 
+recalculated from the master dataset about once a day. This could be accomplished by 
+re-running the HQL query files that I use to compute the batch views. I was considering putting
+my master datasets in HBase and appending new rows to them through my speed layer, but it
+seems like a bad idea to place so much data in HBase, which shoud only store batch views. 
 
 ## Section III: Creating the Speed Layer for the Application
 
@@ -81,6 +85,10 @@ sense to pull this data from the API multiple times per day. However, the crime 
 daily. Thus, it makes more sense to pull in new data for the crime dataset once a day. I set my program
 to pull data more frequently simply for the sake of demoing that my programs for streaming crime data
 could hypothetically handle more frequent updates to the dataset.
+
+My scala programs read data from the respective kafka topics and then increment rows or append new
+rows to the respective tables stored in HBase after doing some integrity checks on the data streaming
+in from the kafka topic.
 
 To run a demo of my speed layer for 311 calls:
 
@@ -106,13 +114,13 @@ For the web application framework, I used Node.js. I created a simple front end 
 options for the user. Each menu option corresponds to a batch view that I created in HBase.
 Each batch view is also incremented with data streamed from my speed layer. I used mustache
 to dynamically render some of the batch views. My app is connected to the speed layer through
-the batch views stored in Hbase, which are incremented by the speed layer.
+the batch views stored in Hbase, which are incremented by the speed layer. For the map visualization, I used Leaflet.
 
 ## Section V: Application Deployment
 
 To deploy my application to the cloud, I used CodeDeploy on AWS. I deployed my application to both
-the QuickDeploy single server (for debugging) and then again to the Load Balanced servers on the cluster.
-On my github repo in the directory `311_crime_app`, you can find the zipfile that I uploaded to S3 and 
-used to deploy to the cloud. You can visit the deployed application at
+the QuickDeploy single server (for debugging) and then again to the Load Balanced servers on the
+cluster. On my github repo in the directory `311_crime_app`, you can find the zipfile that I uploaded
+to S3 and used to deploy to the cloud. You can visit the deployed application at:
 
 `mpcs53014-loadbalancer-217964685.us-east-2.elb.amazonaws.com:3303/`
