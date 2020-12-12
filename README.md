@@ -23,7 +23,7 @@ All of the code that I wrote for this application is contained in this github re
 * *sh* - contains the shell scripts I used to get the datasets on HDFS
 * *speedLayer* - contains the programs that I used to create the speed layer for my app
 
-To see a demo of the application, see the video linked [here](https://www.loom.com/share/3b870d008e674c6ea0ec70abccb6c5a5).
+To see a demo of the application, see the video linked [here](https://www.loom.com/share/4cd1b6bc629f4684a2d989ba6d3f4b77).
 
 ## Section I: Getting the data into HDFS on the AWS Cluster
 
